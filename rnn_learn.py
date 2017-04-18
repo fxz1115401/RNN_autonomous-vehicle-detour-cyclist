@@ -1,6 +1,6 @@
 import numpy as np
 import tensorflow as tf
-%matplotlib inline
+#%matplotlib inline
 import matplotlib.pyplot as plt
 
 # Global config variables
@@ -51,4 +51,8 @@ def gen_epochs(n, num_steps):
 
 
 
-gen_data()
+[x,y] = gen_data()
+print("x: ")
+print(x)
+print("y: ")
+print(y)
