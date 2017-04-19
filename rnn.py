@@ -26,8 +26,8 @@ data_with_cyc = [];
 data_with_cyc_str = [];
 batch_size = 20;
 
-training = False
-with open('test2.csv', 'rb') as csvfile:
+training = 0
+with open('cyclistWith3sAfter.csv', 'rb') as csvfile:
     data_pre = csv.reader(csvfile, delimiter=',', quotechar='"')
     for row in data_pre:
         if row[4] != 'NULL':
@@ -37,11 +37,13 @@ with open('test2.csv', 'rb') as csvfile:
             del row[1:6]
             data_with_cyc_str.append(row)
 
-
+del data_with_cyc_str[0]
 
 for row in data_with_cyc_str:
     float_row = []
     for col in row:
+
+        col = col.strip()
         float_row.append( float(col))
     data_with_cyc.append(float_row)
 
@@ -79,15 +81,23 @@ for k in range(num_batch):
 
 
 
+
+
+
+
+
+
+
 # Parameters
-learning_rate = 0.001
-training_iters = 12000
-display_step = 1
+learning_rate = 0.0005
+# training_iters = 12000
+training_iters = 500000
+display_step = 100 
 
 # Network Parameters
 n_input = 6 # MNIST data input (img shape: 28*28) columns
 n_steps = 10 # timesteps
-n_hidden = 128 # hidden layer num of features
+n_hidden = 64 # hidden layer num of features
 n_classes = 2 # MNIST total classes (0-9 digits)
 
 # tf Graph input
@@ -158,7 +168,7 @@ with tf.Session() as sess:
             # Run optimization op (backprop)
         if training:
             sess.run(optimizer, feed_dict={x: batch_x, y: batch_y})
-            saver.save(sess,"./model/model.ckpt")
+            # saver.save(sess,"./model/model.ckpt")
             if step % display_step == 0:
                 # Calculate batch accuracy
                 # acc = sess.run(accuracy, feed_dict={x: batch_x, y: batch_y})
@@ -172,6 +182,7 @@ with tf.Session() as sess:
             step += 1
         else:
             saver.restore(sess, "./model/model.ckpt")
+            # saver.restore(sess, "./train/model.ckpt")
             sess.run(optimizer, feed_dict={x: batch_x, y: batch_y})
             #saver.save(sess,"./model/model.skpt")
             if step % display_step == 0:
@@ -185,6 +196,8 @@ with tf.Session() as sess:
                 #      "{:.6f}".format(loss) + ", Training Accuracy= " + \
                 #     "{:.5f}".format(acc))
             step += 1
+    if training:
+        saver.save(sess,"./model/model.ckpt")
 
     print("Optimization Finished!")
 
